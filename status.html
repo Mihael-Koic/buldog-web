@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Status narudžbe | Pizza Buldog</title>
+  <link rel="icon" href="/image/Buldog.PNG">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo"><a href="index.html"><img class="imagelogo" src="/image/Logo buldog.png" alt="Pizza Buldog"></a></div>
+    <div class="menu-toggle" id="menu-toggle">☰</div>
+    <nav id="nav">
+      <a href="index.html">Početna</a>
+      <a href="menu.html">Jelovnik</a>
+      <a href="checkout.html">Tvoja narudžba <span id="cartCounter">0</span></a>
+    </nav>
+  </header>
+
+  <main class="status-page">
+    <section class="checkout-panel">
+      <p class="eyebrow">Praćenje narudžbe</p>
+      <h1>Status narudžbe</h1>
+      <form id="statusForm" class="checkout-form status-form">
+        <label>
+          Broj narudžbe
+          <input id="statusOrderId" name="order_id" type="text" required>
+        </label>
+        <label>
+          Telefon koji je upisan u narudžbi
+          <input id="statusPhone" name="phone" type="tel" required>
+        </label>
+        <button class="btn-primary form-submit" type="submit">Provjeri status</button>
+      </form>
+      <div id="statusResult" class="status-result"></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="order-system.js"></script>
+  <script>
+    const toggle = document.getElementById('menu-toggle');
+    const nav = document.getElementById('nav');
+    if (toggle && nav) toggle.addEventListener('click', () => nav.classList.toggle('active'));
+  </script>
+</body>
+</html>

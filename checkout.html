@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tvoja narudžba | Pizza Buldog</title>
+  <link rel="icon" href="/image/Buldog.PNG">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo"><a href="index.html"><img class="imagelogo" src="/image/Logo buldog.png" alt="Pizza Buldog"></a></div>
+    <div class="menu-toggle" id="menu-toggle">☰</div>
+    <nav id="nav">
+      <a href="index.html">Početna</a>
+      <a href="menu.html">Jelovnik</a>
+      <a href="checkout.html">Tvoja narudžba <span id="cartCounter">0</span></a>
+    </nav>
+  </header>
+
+  <main class="order-page">
+    <section class="checkout-panel">
+      <div>
+        <p class="eyebrow">Online naručivanje</p>
+        <h1>Tvoja narudžba</h1>
+      </div>
+
+      <div id="emptyCart" class="empty-cart">
+        Košarica je prazna. Vrati se na jelovnik i dodaj hranu.
+        <br><br>
+        <a class="btn-primary" href="menu.html">Pogledaj jelovnik</a>
+      </div>
+
+      <div id="checkoutItems" class="cart-list"></div>
+
+      <div class="checkout-total">
+        <span>Ukupno</span>
+        <strong id="checkoutTotal">0,00 EUR</strong>
+      </div>
+    </section>
+
+    <section class="checkout-panel">
+      <p class="eyebrow">Podaci za dostavu</p>
+      <h2>Pošalji narudžbu</h2>
+      <form id="checkoutForm" class="checkout-form">
+        <label>
+          Ime i prezime
+          <input name="customer_name" type="text" autocomplete="name" required>
+        </label>
+        <label>
+          Telefon
+          <input name="phone" type="tel" autocomplete="tel" required>
+        </label>
+        <label>
+          Adresa
+          <input name="address" type="text" autocomplete="street-address" required>
+        </label>
+        <div class="form-grid">
+          <label>
+            Tip narudžbe
+            <select name="delivery_type">
+              <option value="delivery">Dostava</option>
+              <option value="pickup">Preuzimanje</option>
+            </select>
+          </label>
+          <label>
+          Plaćanje
+            <select name="payment_method">
+              <option value="cash">Gotovina</option>
+              <!-- <option value="card">Kartica</option> -->
+            </select>
+          </label>
+        </div>
+        <label>
+          Napomena
+          <textarea name="note" rows="4" placeholder="Npr. bez luka, zvoniti na prezime..."></textarea>
+        </label>
+        <button id="submitOrder" class="btn-primary form-submit" type="submit">Pošalji narudžbu</button>
+        <p id="checkoutMessage" class="form-message"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <small>© 2003 - <span id="year"></span> Pizza Buldog. Sva prava pridržana.</small>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="order-system.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const toggle = document.getElementById('menu-toggle');
+    const nav = document.getElementById('nav');
+    if (toggle && nav) toggle.addEventListener('click', () => nav.classList.toggle('active'));
+  </script>
+</body>
+</html>

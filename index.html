@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pizza Buldog Samobor</title>
+  <link rel="icon" href="/image/Buldog.PNG">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- MAINTENANCE POPUP -->
+<div id="maintenancePopup" class="maintenance-overlay" style="display:none;">
+  <div class="maintenance-box"> 
+    <div class="logo1">
+      <img src="/image/Buldog.PNG" alt="Pizza Bulldog logo">
+    </div>
+    <h2 class="title">Web stranica je trenutno u održavanju</h2>
+    <p class="tt">Radimo na ažuriranju sadržaja i poboljšanju usluge. Hvala na razumijevanju.</p>
+    <p class="note">Molimo vas da posjetite stranicu ponovno za nekoliko minuta.</p>
+  </div>
+</div>
+
+  <!-- Navigacija -->
+  <header class="navbar">
+  <div class="logo"><a href="index.html"><img class="imagelogo" src="/image/Logo buldog.png" alt=""></a></div>
+  <div class="menu-toggle" id="menu-toggle">☰</div>
+  <nav id="nav">
+    <a href="#onama">O nama</a>
+    <!-- <a href="#galerija">Galerija</a>-->
+    <a href="#kontakt">Kontakt</a>
+    <a href="menu.html" class="btn">Jelovnik</a>
+    <a href="admin.html">Admin</a>
+  </nav>
+</header>
+
+
+  <!-- Hero sekcija -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1>S vama već 23 godine!</h1>
+      <p>Svježi sastojci • Originalan okus • Domaća atmosfera</p> <br><br>
+      <a href="menu.html" class="btn-primary">Pogledaj Jelovnik</a> <br> 
+          <div class="scroll-down" onclick="document.getElementById('onama').scrollIntoView({ behavior: 'smooth' });"> &#x25BC; </div>
+    </div>
+  </section>
+
+  <style>
+    .scroll-down {
+  font-size: 3rem;         /* veličina strelice */
+  color: #f44336;          /* ista boja kao gumb ili druga po želji */
+  text-align: center;
+  margin-top: 40px;
+  animation: bounce 1.5s infinite;
+  cursor: pointer;
+}
+
+/* Animacija da strelica “skače” */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(10px);
+  }
+  60% {
+    transform: translateY(5px);
+  }
+}
+  </style>
+
+  <!-- O nama -->
+  <section id="onama" class="section">
+    <h2>O nama</h2>
+    <p>
+      Pizza Buldog već godinama donosi najbolju pizzu u Samoboru. Smješteni u Mirnovečkoj ulici 50, naši su gosti uvijek dobrodošli, dok istovremeno pružamo brzu i besplatnu dostavu u Samoboru i okolici.
+    U našoj ponudi nalaze se raznovrsne pizze, lazanje, burgeri, salate, odresci, grill jela, gableci i pića. Svi naši specijaliteti pripremljeni su od svježih i domaćih namirnica, s naglaskom na kvalitetu i ljubav prema pravoj talijanskoj kuhinji.
+    Za naručene četiri pizze, peta je gratis – naš način da vam zahvalimo na povjerenju.
+    Naš tim posvećen je brzini i ljubaznosti, a naši dostavljači uvijek donose tople i ukusne obroke na vaša vrata.
+    </p>
+  </section>
+
+  <!-- Alergeni -->
+  <section id="alergeni" class="section">
+    <h2>Alergeni</h2>
+    <p>Popis 14 alergena prema EU pravilima. Brojevi u pregledu alergena na jelovniku odgovaraju ovom popisu.</p>
+    <br>
+    <button class="btn-primary" id="open-legal-allergens" type="button">Pravni alergeni (EU 14)</button>
+  </section>
+
+  <!-- Galerija -->
+   <!--
+  <section id="galerija" class="section gallery">
+  <h2>Galerija</h2>
+  <div class="grid"> -->
+    <!-- Slike -->
+     <!--
+    <img src="/image/slika2.png" alt="Restoran">
+    <img src="/image/slika.jpg" alt="Pasta">
+    -->
+
+    <!-- Video -->
+      <!--
+    <video autoplay muted loop controls playsinline>
+  <source src="/image/videotest.mp4" type="video/mp4">
+  Vaš preglednik ne podržava video tag.
+</video>
+ -->
+  </div>
+</section>
+
+  <!-- Kontakt -->
+  <section id="kontakt" class="section contact">
+    <h2>Kontakt</h2>
+    <p>📍 Adresa: Mirnovečka Cesta 50, 10430, Samobor</p> <br>
+    <p>📞 Telefon: <a class="kontakt" href="tel:+38513363914">+385 01 336 3914</a></p>
+    <p>📱 Mobitel: <a class="kontakt" href="tel:+385912345678">+385 95 884 2202</a></p> <br>
+    <p>🕒 Radno vrijeme:</p>
+    <p>Pon - Sub 10:00 – 23:00</p>
+    <p>Nedelja 13:00 - 22:00</p> <br>
+    <a class="google-review-btn" href="https://search.google.com/local/writereview?placeid=ChIJ-0twaQ3MZUcRQ8baIYZHl9w" target="_blank" rel="noopener" style="display: inline-block; padding: 14px 24px; background: #f44336; color: white; font-weight: bold; text-decoration: none; border-radius: 8px;">Ostavi Google recenziju</a> <br> <br>
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2781.854584921335!2d15.716618676471743!3d45.794140911363684!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4765cc0d69704bfb%3A0xdc97478621dac643!2sPizza%20Buldog!5e0!3m2!1sen!2shr!4v1758706247536!5m2!1sen!2shr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <small>© 2003 - <span id="year"></span> Pizza Buldog. Sva prava pridržana.</small>
+  </footer>
+
+  <button class="back-to-top" id="back-to-top" type="button" aria-label="Vrati na vrh">↑</button>
+
+  <!-- Pravni alergeni modal -->
+  <div class="modal-overlay modal-overlay--sheet" id="legal-allergens-overlay" hidden>
+    <div class="modal modal--sheet" role="dialog" aria-modal="true" aria-labelledby="legal-allergens-title">
+      <button class="modal-close" type="button" aria-label="Zatvori">✕</button>
+      <h2 id="legal-allergens-title">Pravni alergeni (EU 14)</h2>
+      <div class="modal-body">
+        <ol class="legal-allergens">
+          <li><span class="allergen-badge">1</span><div><div class="allergen-name">Gluten</div><div class="allergen-desc">žitarice koje sadrže gluten: pšenica, raž, ječam, zob, pir</div></div></li>
+          <li><span class="allergen-badge">2</span><div><div class="allergen-name">Rakovi</div><div class="allergen-desc">rakovi i proizvodi od rakova (škampi, jastog, rak)</div></div></li>
+          <li><span class="allergen-badge">3</span><div><div class="allergen-name">Jaja</div><div class="allergen-desc">jaja i proizvodi od jaja</div></div></li>
+          <li><span class="allergen-badge">4</span><div><div class="allergen-name">Riba</div><div class="allergen-desc">riba i proizvodi od ribe</div></div></li>
+          <li><span class="allergen-badge">5</span><div><div class="allergen-name">Kikiriki</div><div class="allergen-desc">kikiriki i proizvodi od kikirikija</div></div></li>
+          <li><span class="allergen-badge">6</span><div><div class="allergen-name">Soja</div><div class="allergen-desc">soja i proizvodi od soje</div></div></li>
+          <li><span class="allergen-badge">7</span><div><div class="allergen-name">Mlijeko</div><div class="allergen-desc">mlijeko i laktoza</div></div></li>
+          <li><span class="allergen-badge">8</span><div><div class="allergen-name">Orašasti plodovi</div><div class="allergen-desc">bademi, lješnjaci, orasi, pistacije, indijski oraščići, pekan, makadamija</div></div></li>
+          <li><span class="allergen-badge">9</span><div><div class="allergen-name">Celer</div></div></li>
+          <li><span class="allergen-badge">10</span><div><div class="allergen-name">Senf</div></div></li>
+          <li><span class="allergen-badge">11</span><div><div class="allergen-name">Sezam</div></div></li>
+          <li><span class="allergen-badge">12</span><div><div class="allergen-name">Sumporni dioksid / sulfiti</div><div class="allergen-desc">konzervansi u nekim vinima, suhomesnatim proizvodima itd.</div></div></li>
+          <li><span class="allergen-badge">13</span><div><div class="allergen-name">Lupina</div></div></li>
+          <li><span class="allergen-badge">14</span><div><div class="allergen-name">Mekušci</div><div class="allergen-desc">dagnje, lignje, hobotnica, puževi itd.</div></div></li>
+        </ol>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-ok" type="button">U redu</button>
+      </div>
+    </div>
+  </div>
+
+   <script src="script.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+   <script src="supabase.js"></script>
+
+   <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3B64JK6VNX"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () { });
+
+  /* ===========================
+   ODRŽAVANJE STRANICE
+=========================== */
+
+const maintenanceMode = false; // true = uključi, false = isključi 
+
+if (maintenanceMode) {
+  document.getElementById("maintenancePopup").style.display = "flex";
+  document.body.style.overflow = "hidden";
+}
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3B64JK6VNX');
+</script>
+   
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggle = document.getElementById('menu-toggle');
+    const nav = document.getElementById('nav');
+    if (toggle && nav) {
+      toggle.addEventListener('click', () => {
+        nav.classList.toggle('active');
+      });
+    }
+
+    const openBtn = document.getElementById('open-legal-allergens');
+    const overlay = document.getElementById('legal-allergens-overlay');
+    const modalClose = overlay ? overlay.querySelector('.modal-close') : null;
+    const modalOk = overlay ? overlay.querySelector('.modal-ok') : null;
+    let lastFocus = null;
+    let lastOverflow = '';
+
+    function closeModal() {
+      if (!overlay) return;
+      overlay.hidden = true;
+      document.body.style.overflow = lastOverflow;
+      if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+      lastFocus = null;
+    }
+
+    function openModal() {
+      if (!overlay) return;
+      lastFocus = document.activeElement;
+      lastOverflow = document.body.style.overflow || '';
+      overlay.hidden = false;
+      document.body.style.overflow = 'hidden';
+      if (modalClose && typeof modalClose.focus === 'function') modalClose.focus();
+    }
+
+    if (openBtn) openBtn.addEventListener('click', openModal);
+    if (modalClose) modalClose.addEventListener('click', closeModal);
+    if (modalOk) modalOk.addEventListener('click', closeModal);
+    if (overlay) {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal();
+      });
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay && overlay.hidden === false) closeModal();
+    });
+
+    const backToTop = document.getElementById('back-to-top');
+    if (backToTop) {
+      const prefersReduced =
+        window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function updateBackToTop() {
+        const y = window.scrollY || document.documentElement.scrollTop || 0;
+        backToTop.classList.toggle('is-visible', y > 450);
+      }
+
+      backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: prefersReduced ? 'auto' : 'smooth' });
+      });
+
+      updateBackToTop();
+      window.addEventListener('scroll', updateBackToTop, { passive: true });
+    }
+  });
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+
+<!-- CSS -->
+<style>
+
+  /* ==============================
+   ODRŽAVANJE STRANICE
+============================== */
+
+.logo1 {
+      margin: 0 auto 1.8rem;
+      width: 180px;
+      max-width: 45%;
+    }
+    .logo1 img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+.note {
+      margin-top: 1.8rem;
+      padding: 1rem 1.2rem;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgb(161, 161, 161);
+      color: #f4f4f4;
+    }
+
+.maintenance-overlay{
+    position:fixed;
+    inset:0;
+    background: radial-gradient(circle at top, rgba(244, 67, 54, 0.18), transparent 35%),
+                  radial-gradient(circle at bottom, rgba(255, 193, 7, 0.14), transparent 40%),
+                  #215b7a;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:999999;
+}
+
+.maintenance-box{
+    width:90%;
+    max-width:550px;
+    background:#232323;
+    padding:35px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 15px 40px rgba(0, 0, 0, 0.35);
+}
+
+.title {
+    color:#ff0000;
+    margin-bottom:20px;
+    font-size:30px;
+}
+
+.tt{
+    font-size:16px;
+    line-height:1.7;
+    color:#f5f5f5;
+}
+-----------------------------------------------------
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  background: #ffffff;
+}
+
+/* Back to top button */
+.back-to-top {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  border: none;
+  background: #f44336;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 900;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 14px 28px rgba(244, 67, 54, 0.28);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  z-index: 1500;
+}
+.back-to-top.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.back-to-top:hover {
+  box-shadow: 0 18px 36px rgba(244, 67, 54, 0.35);
+}
+.back-to-top:active {
+  transform: translateY(0) scale(0.98);
+}
+.back-to-top:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 3px;
+}
+
+/* ecenzija gumb */
+.google-review-btn {
+  display: inline-block;
+  padding: 14px 24px;
+  background: #f44336;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+.scroll-down {
+  font-size: 3rem;         /* veličina strelice */
+  color: #f44336;          /* ista boja kao gumb ili druga po želji */
+  text-align: center;
+  margin-top: 80px;
+  animation: bounce 1.5s infinite;
+  cursor: pointer;
+}
+
+/* Animacija da strelica “skače” */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(10px);
+  }
+  60% {
+    transform: translateY(5px);
+  }
+}
+
+/* Navigacija */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #111;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  position: relative;
+}
+.navbar .logo {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.imagelogo {
+  width: 240px; /* širina slike */
+  height: auto;
+  transition: transform 0.3s ease;
+}
+.imagelogo:hover {
+  transform: rotate(-5deg) scale(1.1);
+}
+
+.navbar nav a {
+  margin: 0 0.8rem;
+  color: #fff;
+  text-decoration: none;
+  transition: 0.3s;
+}
+.navbar nav a:hover {
+  color: #fc4848;
+}
+
+.obavjest {
+  display: flex;
+  justify-content: center;   /* horizontalno */
+  align-items: center;       /* vertikalno */
+  text-align: center;
+  color: #8a8a8a;            /* lijepa siva */
+  font-size: 16px;
+  margin: 40px 0;
+}
+
+/* Hero */
+.hero {
+  background: 
+    linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), /* tamnjenje slike */
+    url('/image/slika3.png') center/cover no-repeat;
+  height: 93vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+}
+
+.hero-text h1 {
+  display: flex;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 5px black;
+}
+.btn-primary {
+  background: #f44336;
+  padding: 0.8rem 1.5rem;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+.btn-primary:hover {
+  background: #d32f2f;
+}
+
+/* Sekcije */
+.section {
+  padding: 4rem 2rem;
+  max-width: 1100px;
+  margin: auto;
+  text-align: center;
+}
+.section h2 {
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  color: #f44336;
+}
+
+h1 {
+  font-size: 50px;
+}
+
+/* Galerija */
+.gallery .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.gallery .grid img,
+.gallery .grid video {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+
+/* Kontakt */
+.contact iframe {
+  width: 100%;
+  height: 300px;
+  border: none;
+  margin-top: 1rem;
+  border-radius: 10px;
+}
+
+/* Meni stranica */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* Menu category tabs (mobile) */
+.category-tabs {
+  display: none;
+}
+.category-tabs .tabs-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  display: flex;
+  gap: 0.6rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.category-tabs .tabs-inner::-webkit-scrollbar {
+  display: none;
+}
+.category-tabs a.tab {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 0.95rem;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid rgba(244, 67, 54, 0.35);
+  color: #111;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+  transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.category-tabs a.tab:active {
+  transform: scale(0.98);
+}
+.category-tabs a.tab.is-active,
+.category-tabs a.tab[aria-current="true"] {
+  background: #f44336;
+  border-color: #f44336;
+  color: #fff;
+}
+.category-tabs a.tab:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+.menu-item {
+  background: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  text-align: left;
+}
+.menu-item h3 {
+  color: #f44336;
+  margin-bottom: 0.5rem;
+}
+.menu-item span {
+  float: right;
+  font-weight: bold;
+}
+
+.menu-item {
+  background: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.6s ease forwards;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.menu-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+}
+
+.menu-item:nth-child(1) { animation-delay: 0.2s; }
+.menu-item:nth-child(2) { animation-delay: 0.4s; }
+.menu-item:nth-child(3) { animation-delay: 0.6s; }
+.menu-item:nth-child(4) { animation-delay: 0.8s; }
+
+.menu-item img {  
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #f43636;
+}
+
+.menu-info {
+  flex: 1;
+}
+
+.menu-item h3 {
+  color: #f44336;
+  margin-bottom: 0.3rem;
+}
+
+.menu-item span {
+  float: right;
+  font-weight: bold;
+}   
+
+.cijena-sl{
+  float: left;
+  font-weight: bold;
+}
+
+.allergen-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  float: right;
+  clear: both; /* ensures it sits under floated price spans */
+  margin-top: 0.65rem;
+  padding: 0.52rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #111;
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.allergen-btn:hover {
+  background: #f44336;
+  border-color: rgba(244, 67, 54, 0.6);
+  box-shadow: 0 10px 20px rgba(244, 67, 54, 0.2);
+}
+.allergen-btn:active {
+  transform: scale(0.98);
+}
+.allergen-btn:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
+/* Modal (Alergeni) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  z-index: 2000;
+}
+.modal-overlay[hidden] {
+  display: none !important;
+}
+.modal {
+  width: min(520px, 100%);
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.1rem 1.1rem 0.9rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  position: relative;
+  max-height: calc(100vh - 2.5rem);
+  display: flex;
+  flex-direction: column;
+}
+.modal h2 {
+  margin: 0 2.2rem 0.75rem 0;
+  font-size: 1.25rem;
+  color: #111;
+}
+.modal-close {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: #fff;
+  cursor: pointer;
+  font-size: 1.05rem;
+}
+.modal-body {
+  color: #222;
+  overflow: auto;
+}
+.modal-muted {
+  color: #666;
+}
+.modal-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.modal-list li {
+  margin: 0.35rem 0;
+}
+.allergen-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 900;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+.modal-ok {
+  padding: 0.55rem 0.95rem;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #f44336;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.legal-allergens {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+.legal-allergens li {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.85rem;
+  border-radius: 14px;
+  background: #fafafa;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  line-height: 1.35;
+}
+.legal-allergens .allergen-name {
+  font-weight: 900;
+  color: #111;
+}
+.legal-allergens .allergen-desc {
+  color: #444;
+  margin-top: 0.15rem;
+}
+
+@media (max-width: 768px) {
+  /* Bottom-sheet feel for modals on mobile */
+  .modal-overlay.modal-overlay--sheet {
+    align-items: flex-end;
+  }
+  .modal.modal--sheet {
+    width: 100%;
+    border-radius: 16px 16px 0 0;
+    max-height: 85vh;
+  }
+  .legal-allergens li {
+    padding: 0.75rem;
+    grid-template-columns: 24px 1fr;
+    gap: 0.65rem;
+  }
+}
+
+/* Footer */
+footer {
+  background: #111;
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 3rem;
+}
+
+.menu-toggle {
+  display: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #fff;
+}
+
+.navbar nav {
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 34px;
+  }
+
+  .section {
+    padding: 2.5rem 1.25rem;
+    scroll-margin-top: 86px; /* tab bar height */
+  }
+
+  .category-tabs {
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 900;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(10px) saturate(160%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .menu-item {
+    padding: 1rem;
+  }
+  .menu-item img {
+    width: 96px;
+    height: 96px;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+  .navbar nav {
+    display: none;
+    flex-direction: column;
+    background: #111;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 200px;
+    padding: 1rem;
+    border-radius: 0 0 0 10px;
+    z-index: 1000;
+  }
+  .navbar nav.active {
+    display: flex;
+  }
+  .navbar nav a {
+    margin: 0.8rem 0;
+  }
+}
+
+.mihael {
+    color: inherit;        /* nasljeđuje boju roditelja */
+    transition: color 0.3s;
+}
+
+.mihael:hover {
+  color: #f44336;        /* npr. crvena boja */
+  text-decoration: underline; /* opcionalno, samo na hover */
+}
+
+.kontakt {
+    color: blue;        /* nasljeđuje boju roditelja */
+    text-decoration: none; /* uklanja podcrtavanje */
+    transition: color 0.3s;
+}
+.keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
+
+<link rel="stylesheet" href="responsive.css">
+
+</body>
+</html>

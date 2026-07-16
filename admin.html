@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin narudžbe | Pizza Buldog</title>
+  <link rel="icon" href="/image/Buldog.PNG">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="responsive.css">
+</head>
+<body class="admin-body">
+  <header class="navbar">
+    <div class="logo"><a href="index.html"><img class="imagelogo" src="/image/Logo buldog.png" alt="Pizza Buldog"></a></div>
+    <div class="menu-toggle" id="menu-toggle">☰</div>
+    <nav id="nav">
+      <a href="index.html">Početna</a>
+    </nav>
+  </header>
+
+  <main class="admin-page">
+    <section id="adminLoginPanel" class="checkout-panel admin-login-panel">
+      <p class="eyebrow">Admin prijava</p>
+      <h1>Prijava za narudžbe</h1> <br>
+      <form id="adminLoginForm" class="checkout-form">
+        <label>
+          Email
+          <input name="email" type="email" autocomplete="username" required>
+        </label>
+        <label>
+          Lozinka
+          <input name="password" type="password" autocomplete="current-password" required>
+        </label> 
+        <button class="btn-primary form-submit" type="submit">Prijavi se</button>
+        <p id="adminLoginMessage" class="form-message"></p>
+      </form>
+    </section>
+
+    <div id="adminAppPanel" hidden>
+    <section class="admin-toolbar">
+      <div>
+        <p class="eyebrow">Kuhinja i dostava</p>
+        <h1>Admin narudžbe</h1>
+        <p><span id="adminEmail"></span> · <span id="adminConnection">Spajam se...</span></p>
+      </div>
+      <div class="admin-actions">
+        <select id="statusFilter" aria-label="Filter statusa">
+          <option value="all">Sve narudžbe</option>
+          <option value="novo">Na čekanju</option>
+          <option value="prihvacena">Prihvaćene</option>
+          <option value="priprema">U pripremi</option>
+          <option value="dostava">U dostavi</option>
+          <option value="zavrsena">Završene</option>
+          <option value="otkazana">Otkazane</option>
+        </select>
+        <button id="enableSound" class="btn-primary" type="button">Uključi zvuk</button>
+        <button id="refreshOrders" class="secondary-button" type="button">Osvježi</button>
+        <button id="deleteVisibleOrders" class="danger-button" type="button">Obriši prikazane</button>
+        <button id="adminLogout" class="secondary-button" type="button">Odjava</button>
+      </div>
+    </section>
+
+    <section id="adminOrders" class="admin-orders" aria-live="polite"></section>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="order-system.js"></script>
+  <script>
+    const toggle = document.getElementById('menu-toggle');
+    const nav = document.getElementById('nav');
+    if (toggle && nav) toggle.addEventListener('click', () => nav.classList.toggle('active'));
+  </script>
+</body>
+</html>
