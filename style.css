@@ -12,6 +12,53 @@ body {
   background: #fff;
 }
 
+/* ==========================
+   GODIŠNJI ODMOR POPUP
+========================== */
+
+.vacation-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999998;
+}
+
+.vacation-box{
+    width: 90%;
+    max-width: 520px;
+    background: #232323;
+    color: white;
+    border-radius: 18px;
+    padding: 35px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,.4);
+}
+
+.vacation-box h2{
+    color:#f44336;
+    margin-bottom:20px;
+}
+
+.vacation-hours{
+    margin:25px 0;
+    padding:18px;
+    background:#333;
+    border-radius:12px;
+}
+
+.vacation-hours strong{
+    display:block;
+    margin-bottom:12px;
+    color:#ffd54f;
+}
+
+.vacation-box button{
+    margin-top:15px;
+}
+
 /* Back to top button */
 .back-to-top {
   position: fixed;
@@ -556,12 +603,19 @@ h1 {
 .checkout-form select,
 .checkout-form textarea,
 .admin-actions select,
+.admin-search,
 .admin-order select {
   width: 100%;
   border: 1px solid rgba(0, 0, 0, 0.16);
   border-radius: 8px;
   padding: 0.72rem 0.8rem;
   background: #fff;
+}
+
+.checkout-form input:disabled {
+  background: #f1f1f1;
+  color: #999;
+  cursor: not-allowed;
 }
 
 .form-grid {
@@ -593,8 +647,14 @@ h1 {
   color: #c62828;
 }
 
+.field-hint {
+  color: #777;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
 .admin-body {
-  background: #f5f5f5;
+  background: #eef0f3;
 }
 
 .admin-toolbar {
@@ -606,35 +666,116 @@ h1 {
   margin-bottom: 1rem;
 }
 
+.admin-toolbar--top {
+  background: linear-gradient(135deg, #151515, #2a2a2a);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  position: relative;
+}
+
+.admin-toolbar--top::after {
+  content: "";
+  position: absolute;
+  inset: auto -60px -90px auto;
+  width: 220px;
+  height: 220px;
+  border-radius: 999px;
+  background: rgba(244, 67, 54, 0.18);
+  pointer-events: none;
+}
+
+.admin-toolbar--top p {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.admin-toolbar--controls {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  padding: 0.9rem;
+}
+
 .admin-toolbar p {
-  color: #555;
+  color: #fff;
 }
 
 .admin-actions {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 0.7rem;
+  width: 100%;
 }
 
-.admin-actions .btn-primary {
+.admin-actions .btn-primary,
+.admin-actions .secondary-button,
+.admin-actions .danger-button {
   border: none;
   cursor: pointer;
+  min-height: 44px;
 }
 
 .admin-actions select {
   min-width: 170px;
+  max-width: 220px;
+}
+
+.admin-search {
+  flex: 1 1 280px;
+  min-height: 44px;
+  min-width: min(100%, 280px);
+}
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(76px, 1fr));
+  gap: 0.65rem;
+  min-width: min(100%, 520px);
+}
+
+.admin-stats div {
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  position: relative;
+  z-index: 1;
+}
+
+.admin-stats strong {
+  display: block;
+  font-size: 1.45rem;
+  line-height: 1;
+  color: #fff;
+}
+
+.admin-stats span {
+  display: block;
+  margin-top: 0.25rem;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.78rem;
+  font-weight: 800;
 }
 
 .admin-orders {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
   gap: 1rem;
 }
 
 .admin-order {
-  padding: 1rem;
+  padding: 1.05rem;
   border-left: 6px solid #777;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.admin-order:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.12);
 }
 
 .admin-order.status-novo {
@@ -674,6 +815,7 @@ h1 {
 .admin-order-head h3 {
   color: #111;
   font-size: 1.35rem;
+  line-height: 1.15;
 }
 
 .order-number {
@@ -684,7 +826,7 @@ h1 {
 
 .status-pill {
   border-radius: 999px;
-  background: #111;
+  background: #222;
   color: #fff;
   padding: 0.28rem 0.6rem;
   font-size: 0.78rem;
@@ -700,12 +842,64 @@ h1 {
   font-size: 0.92rem;
 }
 
+.admin-order-meta span,
+.admin-meta-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  background: #f1f1f1;
+}
+
+.admin-order.status-novo .status-pill {
+  background: #f44336;
+}
+
+.admin-order.status-prihvacena .status-pill {
+  background: #1976d2;
+}
+
+.admin-order.status-priprema .status-pill {
+  background: #b77900;
+}
+
+.admin-order.status-dostava .status-pill {
+  background: #7b1fa2;
+}
+
+.admin-order.status-zavrsena .status-pill {
+  background: #2e7d32;
+}
+
+.admin-order.status-otkazana .status-pill {
+  background: #555;
+}
+
+.admin-meta-badge--scheduled {
+  background: #fff4e5;
+  color: #9a4d00;
+  font-weight: 900;
+}
+
 .admin-address,
 .admin-note {
   padding: 0.7rem;
   border-radius: 8px;
   background: #fafafa;
   margin: 0.6rem 0;
+}
+
+.admin-address::before {
+  content: "Adresa: ";
+  font-weight: 900;
+  color: #111;
+}
+
+.admin-note::before {
+  content: "Napomena: ";
+  font-weight: 900;
+  color: #111;
 }
 
 .admin-note {
@@ -719,6 +913,12 @@ h1 {
   margin: 0.8rem 0;
 }
 
+.admin-items li {
+  padding: 0.55rem 0.65rem;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
 .admin-items span {
   color: #666;
 }
@@ -727,6 +927,11 @@ h1 {
   align-items: center;
   padding-top: 0.8rem;
   border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.admin-order-bottom > strong {
+  font-size: 1.25rem;
+  color: #111;
 }
 
 .admin-card-actions {
@@ -745,6 +950,20 @@ h1 {
   border-radius: 8px;
   background: #fff;
   text-align: center;
+}
+
+#enableSound.is-muted {
+  background: #f44336;
+}
+
+.cancel-order-button {
+  width: 100%;
+  margin-top: 0.9rem;
+}
+
+.status-result {
+  display: grid;
+  gap: 1rem;
 }
 
 .admin-login-panel,
@@ -1179,3 +1398,422 @@ footer {
     transform: translateY(0);
   }
 }
+
+/* ================================
+   RESTORAN ADMIN PANEL REDESIGN
+================================ */
+
+.admin-body {
+    background:
+        linear-gradient(
+            135deg,
+            #111 0%,
+            #1c1c1c 40%,
+            #f5f5f5 40%
+        );
+    min-height:100vh;
+}
+
+
+/* GLAVNI HEADER */
+
+.admin-toolbar--top {
+    background: linear-gradient(135deg,#000,#292929);
+    border-radius:20px;
+    padding:2rem;
+    color:white;
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.35);
+}
+
+
+.admin-toolbar--top h1 {
+    font-size:2.8rem;
+    color:white;
+}
+
+
+.admin-toolbar--top p {
+    font-size:1.1rem;
+    opacity:.8;
+}
+
+
+
+/* STATISTIKA */
+
+.admin-stats {
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(140px,1fr));
+    gap:1rem;
+}
+
+
+.admin-stats div {
+    background:
+    rgba(255,255,255,.12);
+
+    backdrop-filter:blur(10px);
+
+    border-radius:18px;
+
+    padding:1.2rem;
+
+    text-align:center;
+
+    border:
+    1px solid rgba(255,255,255,.15);
+}
+
+
+.admin-stats strong {
+    font-size:2.2rem;
+    color:#ff4b3e;
+}
+
+
+.admin-stats span {
+    color:white;
+}
+
+
+
+/* KONTROLE */
+
+.admin-toolbar--controls {
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:1rem;
+
+    margin-top:1rem;
+
+}
+
+
+
+/* KARTICE NARUDŽBI */
+
+.admin-orders {
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(360px,1fr));
+
+    gap:1.5rem;
+
+}
+
+
+
+.admin-order {
+
+    background:white;
+
+    border-radius:22px;
+
+    padding:1.5rem;
+
+    border:none;
+
+    box-shadow:
+    0 15px 40px rgba(0,0,0,.12);
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+
+
+.admin-order:hover {
+
+    transform:
+    translateY(-5px);
+
+}
+
+
+
+.admin-order::before {
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:0;
+
+    width:100%;
+
+    height:7px;
+
+    background:#f44336;
+
+}
+
+
+
+.admin-order.status-novo::before {
+    background:#f44336;
+}
+
+
+.admin-order.status-prihvacena::before {
+    background:#2196f3;
+}
+
+
+.admin-order.status-priprema::before {
+    background:#ff9800;
+}
+
+
+.admin-order.status-dostava::before {
+    background:#9c27b0;
+}
+
+
+.admin-order.status-zavrsena::before {
+    background:#4caf50;
+}
+
+
+
+
+/* NASLOV */
+
+.admin-order-head {
+
+    align-items:center;
+
+}
+
+
+.admin-order-head h3 {
+
+    font-size:1.5rem;
+
+}
+
+
+
+.status-pill {
+
+    padding:.45rem 1rem;
+
+    font-size:.9rem;
+
+    border-radius:50px;
+
+}
+
+
+
+/* INFORMACIJE */
+
+
+.admin-order-meta {
+
+    display:flex;
+
+    gap:.5rem;
+
+    flex-wrap:wrap;
+
+    margin:1rem 0;
+
+}
+
+
+.admin-order-meta span {
+
+    background:#f1f1f1;
+
+    padding:.5rem .8rem;
+
+    border-radius:50px;
+
+    font-weight:700;
+
+}
+
+
+
+/* ARTIKLI */
+
+.admin-items li {
+
+    background:#fafafa;
+
+    border-radius:12px;
+
+    padding:.8rem;
+
+    margin-bottom:.5rem;
+
+    font-size:1.05rem;
+
+    display:flex;
+
+    justify-content:space-between;
+
+}
+
+
+
+.admin-items li span {
+
+    color:#f44336;
+
+    font-weight:900;
+
+}
+
+
+
+/* CIJENA */
+
+
+.admin-order-bottom {
+
+    margin-top:1rem;
+
+    padding-top:1rem;
+
+}
+
+
+
+.admin-order-bottom strong {
+
+    font-size:1.8rem;
+
+    color:#f44336;
+
+}
+
+
+
+/* SELECT STATUS */
+
+.admin-card-actions select {
+
+    height:45px;
+
+    border-radius:12px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+}
+
+
+
+/* GUMBI */
+
+.admin-card-actions button,
+.secondary-button,
+.danger-button {
+
+
+    border-radius:50px!important;
+
+    padding:.7rem 1.2rem!important;
+
+    font-weight:900;
+
+}
+
+
+
+/* NOVA NARUDŽBA ANIMACIJA */
+
+.admin-order.status-novo {
+
+    animation:
+    pulseOrder 1.8s infinite;
+
+}
+
+
+
+@keyframes pulseOrder {
+
+
+0% {
+
+box-shadow:
+0 0 0 0 rgba(255, 17, 0, 0.5);
+
+}
+
+
+70% {
+
+box-shadow:
+0 0 0 18px rgba(244,67,54,0);
+
+}
+
+
+100% {
+
+box-shadow:
+0 0 0 0 rgba(244,67,54,0);
+
+}
+
+}
+
+
+
+/* MOBITEL */
+
+@media(max-width:768px){
+
+
+.admin-body {
+
+background:#f5f5f5;
+
+}
+
+
+
+.admin-toolbar--top h1 {
+font-size:2rem;
+}
+
+.admin-orders {
+grid-template-columns:1fr;
+}
+
+.admin-order {
+border-radius:18px;
+}
+
+.admin-order-bottom {
+display:flex;
+flex-direction:column;
+gap:1rem;
+align-items:stretch;
+}
+
+.admin-card-actions {
+width:100%;
+}
+
+.admin-card-actions select {
+width:100%;
+
+  }
+}
+
+

@@ -198,6 +198,18 @@ h1 {
   .admin-toolbar {
     align-items: flex-start;
   }
+
+  .admin-toolbar--top {
+    display: grid;
+  }
+
+  .admin-toolbar--controls {
+    top: 68px;
+  }
+
+  .admin-stats {
+    width: 100%;
+  }
 }
 
 @media (max-width: 768px) {
@@ -336,6 +348,11 @@ h1 {
 
   .admin-actions > * {
     width: 100%;
+    max-width: none;
+  }
+
+  .admin-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .admin-order-head,

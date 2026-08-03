@@ -15,6 +15,7 @@
     <nav id="nav">
       <a href="index.html">Početna</a>
       <a href="menu.html">Jelovnik</a>
+      <a href="status.html">Status narudžbe</a>
       <a href="checkout.html">Tvoja narudžba <span id="cartCounter">0</span></a>
     </nav>
   </header>
@@ -72,6 +73,19 @@
             </select>
           </label>
         </div>
+        <div class="form-grid">
+          <label>
+            Vrijeme narudžbe
+            <select name="order_time_type" id="orderTimeType">
+              <option value="now">Što prije</option>
+              <option value="scheduled">Zakaži za određeno vrijeme</option>
+            </select>
+          </label>
+          <label id="scheduledForLabel" hidden>
+            Zakaži za
+            <input name="scheduled_for" id="scheduledForInput" type="datetime-local" disabled>
+          </label>
+        </div>
         <label>
           Napomena
           <textarea name="note" rows="4" placeholder="Npr. bez luka, zvoniti na prezime..."></textarea>
@@ -89,6 +103,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
   <script src="order-system.js"></script>
+  <script src="Block.js"></script>
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
     const toggle = document.getElementById('menu-toggle');

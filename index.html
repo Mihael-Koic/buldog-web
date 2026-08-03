@@ -9,6 +9,34 @@
 </head>
 <body>
 
+  <!-- GODIŠNJI ODMOR POPUP -->
+   <!-- 
+<div id="vacationPopup" class="vacation-overlay">
+  <div class="vacation-box">
+    <div class="logo1">
+      <img src="/image/Buldog.PNG" alt="Pizza Buldog logo">
+    </div> 
+
+    <h2>Obavijest</h2>
+
+    <p>
+      Zbog korištenja godišnjeg odmora privremeno radimo prema izmijenjenom radnom vremenu.
+    </p>
+
+    <div class="vacation-hours">
+      <strong>Vrijedi od 20.07.2026. do 31.07.2026.</strong>
+
+      <p>Ponedjeljak – Petak: <b>10:00 – 18:00</b></p>
+      <p>Subota: <b>16:00 - 23:00</b></p>
+      <p>Nedelja: <b>12:00 - 22:00</b></p>
+    </div>
+
+    <button id="closeVacationPopup" class="btn-primary">
+      U redu
+    </button>
+  </div>
+</div> -->
+
 <!-- MAINTENANCE POPUP -->
 <div id="maintenancePopup" class="maintenance-overlay" style="display:none;">
   <div class="maintenance-box"> 
@@ -161,11 +189,25 @@
    <script src="script.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
    <script src="supabase.js"></script>
+   <script src="Block.js"></script>
 
    <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3B64JK6VNX"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () { });
+
+  // popup godisnji odmor
+      const vacationPopup = document.getElementById("vacationPopup");
+const closeVacationPopup = document.getElementById("closeVacationPopup");
+
+if (vacationPopup) {
+  document.body.style.overflow = "hidden";
+
+  closeVacationPopup.addEventListener("click", () => {
+    vacationPopup.style.display = "none";
+    document.body.style.overflow = "";
+  });
+}
 
   /* ===========================
    ODRŽAVANJE STRANICE
@@ -256,6 +298,53 @@ if (maintenanceMode) {
 
 <!-- CSS -->
 <style>
+
+  /* ==========================
+   GODIŠNJI ODMOR POPUP
+========================== */
+
+.vacation-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999998;
+}
+
+.vacation-box{
+    width: 90%;
+    max-width: 520px;
+    background: #232323;
+    color: white;
+    border-radius: 18px;
+    padding: 35px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,.4);
+}
+
+.vacation-box h2{
+    color:#f44336;
+    margin-bottom:20px;
+}
+
+.vacation-hours{
+    margin:25px 0;
+    padding:18px;
+    background:#333;
+    border-radius:12px;
+}
+
+.vacation-hours strong{
+    display:block;
+    margin-bottom:12px;
+    color:#ffd54f;
+}
+
+.vacation-box button{
+    margin-top:15px;
+}
 
   /* ==============================
    ODRŽAVANJE STRANICE

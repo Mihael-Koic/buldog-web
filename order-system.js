@@ -38,6 +38,63 @@
       .trim();
   }
 
+  function cleanBaseName(name, prefix) {
+    return String(name || '')
+      .replace(new RegExp('^' + prefix + '\\s+', 'i'), '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function productPrices(item) {
+    const prices = [];
+    item.querySelectorAll('span, .cijena-sl').forEach((priceEl) => {
+      const price = parsePrice(priceEl.textContent);
+      if (price === null) return;
+      prices.push({
+        label: optionName(priceEl.textContent),
+        price,
+      });
+    });
+    return prices;
+  }
+
+  function buildSpecialOptions() {
+    const pizzaOptions = [];
+    const burgerOptions = [];
+
+    document.querySelectorAll('#pizze .menu-item').forEach((item) => {
+      const title = item.querySelector('h3');
+      if (!title) return;
+      const name = title.textContent.trim();
+      if (/pizza\s+bianca/i.test(name)) return;
+
+      productPrices(item).forEach((option) => {
+        const size = option.label ? ' ' + option.label : '';
+        pizzaOptions.push({
+          label: `(${cleanBaseName(name, 'Pizza')}${size}) + vrhnje`,
+          price: Number(option.price) + 1,
+        });
+      });
+    });
+
+    document.querySelectorAll('#burgeri .menu-item').forEach((item) => {
+      const title = item.querySelector('h3');
+      if (!title) return;
+      const name = title.textContent.trim();
+      if (/egg\s+burger/i.test(name) || /pohani\s+sir/i.test(name)) return;
+
+      productPrices(item).forEach((option) => {
+        const variant = option.label ? ' ' + option.label : '';
+        burgerOptions.push({
+          label: `(${name}${variant}) + jaje`,
+          price: Number(option.price) + 1,
+        });
+      });
+    });
+
+    return { pizzaOptions, burgerOptions };
+  }
+
   function cart() {
     try {
       return JSON.parse(localStorage.getItem(CART_KEY)) || [];
@@ -57,6 +114,17 @@
 
   function total(items) {
     return items.reduce((sum, item) => sum + itemPrice(item) * Number(item.quantity || 1), 0);
+  }
+
+  function formatDateTime(value) {
+    if (!value) return '';
+    return new Date(value).toLocaleString('hr-HR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   }
 
   function updateCartCounter() {
@@ -88,6 +156,11 @@
       const value = Math.random() * 16 | 0;
       return (char === 'x' ? value : (value & 0x3 | 0x8)).toString(16);
     });
+  }
+
+  function toLocalDateTimeInputValue(date) {
+    const pad = (value) => String(value).padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
   }
 
   function showToast(message) {
@@ -123,14 +196,24 @@
       item.name === normalized.name
     ));
 
-    if (existing) existing.quantity += 1;
-    else items.push({ ...normalized, quantity: 1 });
+    if (existing) {
+      existing.quantity += 1;
+      existing.options = normalizedOptions;
+      const selected = existing.options[Number(existing.optionIndex || 0)] || existing.options[0];
+      existing.optionIndex = existing.options.indexOf(selected);
+      existing.option = selected.label || 'Standardno';
+      existing.price = Number(selected.price || 0);
+    } else {
+      items.push({ ...normalized, quantity: 1 });
+    }
 
     saveCart(items);
     showToast('Dodano u narudžbu');
   }
 
   function setupMenuOrdering() {
+    const specialOptions = buildSpecialOptions();
+
     document.querySelectorAll('.menu-item').forEach((item, index) => {
       const info = item.querySelector('.menu-info');
       const title = info ? info.querySelector('h3') : null;
@@ -138,15 +221,16 @@
 
       info.querySelectorAll('button[onclick*="addToCart"]').forEach((button) => button.remove());
 
-      const prices = [];
-      info.querySelectorAll('span, .cijena-sl').forEach((priceEl) => {
-        const price = parsePrice(priceEl.textContent);
-        if (price === null) return;
-        prices.push({
-          label: optionName(priceEl.textContent),
-          price,
-        });
-      });
+      let prices = productPrices(item);
+      const productName = title.textContent.trim();
+
+      if (/^egg\s+burger$/i.test(productName) && specialOptions.burgerOptions.length) {
+        prices = specialOptions.burgerOptions;
+      }
+
+      if (/^pizza\s+bianca$/i.test(productName) && specialOptions.pizzaOptions.length) {
+        prices = specialOptions.pizzaOptions;
+      }
 
       if (!prices.length) {
         prices.push({
@@ -214,7 +298,32 @@
     const form = document.getElementById('checkoutForm');
     const submit = document.getElementById('submitOrder');
     const message = document.getElementById('checkoutMessage');
+    const orderTimeType = document.getElementById('orderTimeType');
+    const scheduledForLabel = document.getElementById('scheduledForLabel');
+    const scheduledForInput = document.getElementById('scheduledForInput');
     if (!list || !totalEl || !form) return;
+
+    function setMinimumScheduleTime() {
+      if (!scheduledForInput) return;
+      const now = new Date();
+      now.setMinutes(now.getMinutes() + 20);
+      now.setSeconds(0, 0);
+      scheduledForInput.min = toLocalDateTimeInputValue(now);
+    }
+
+    function updateScheduleFields() {
+      const isScheduled = orderTimeType && orderTimeType.value === 'scheduled';
+      if (scheduledForLabel) scheduledForLabel.hidden = !isScheduled;
+      if (scheduledForInput) {
+        scheduledForInput.required = !!isScheduled;
+        scheduledForInput.disabled = !isScheduled;
+        if (isScheduled) setMinimumScheduleTime();
+        else scheduledForInput.value = '';
+      }
+    }
+
+    if (orderTimeType) orderTimeType.addEventListener('change', updateScheduleFields);
+    updateScheduleFields();
 
     function render() {
       const items = cart();
@@ -226,13 +335,16 @@
         const options = Array.isArray(item.options) && item.options.length
           ? item.options
           : [{ label: item.option || 'Standardno', price: Number(item.price || 0) }];
+        const choiceLabel = /^egg\s+burger$/i.test(item.name)
+          ? 'Odaberi burger'
+          : (/^pizza\s+bianca$/i.test(item.name) ? 'Odaberi pizzu' : 'Veličina / varijanta');
         const row = document.createElement('div');
         row.className = 'cart-row';
         row.innerHTML = `
           <div>
             <strong>${escapeHtml(item.name)}</strong>
             <label class="cart-option-label">
-              Veličina / varijanta
+              ${choiceLabel}
               <select data-action="option" data-index="${index}">
                 ${options.map((option, optionIndex) => `
                   <option value="${optionIndex}" ${Number(item.optionIndex || 0) === optionIndex ? 'selected' : ''}>
@@ -307,6 +419,15 @@
 
       const formData = new FormData(form);
       const orderId = createId();
+      const isScheduled = formData.get('order_time_type') === 'scheduled';
+      const scheduledFor = isScheduled ? String(formData.get('scheduled_for') || '') : '';
+      if (isScheduled && !scheduledFor) {
+        message.textContent = 'Odaberi vrijeme za zakazanu narudžbu.';
+        message.className = 'form-message is-error';
+        submit.disabled = false;
+        submit.textContent = 'Pošalji narudžbu';
+        return;
+      }
       const payload = {
         id: orderId,
         customer_name: String(formData.get('customer_name') || '').trim(),
@@ -319,10 +440,18 @@
         total: total(items),
         status: 'novo',
       };
+      if (isScheduled) {
+        payload.scheduled_for = new Date(scheduledFor).toISOString();
+        payload.is_scheduled = true;
+      }
 
       const { error } = await window.supabaseClient.from('orders').insert(payload);
       if (error) {
-        message.textContent = 'Narudžba nije poslana: ' + error.message;
+        const missingScheduledColumn =
+          error.message && (error.message.includes('is_scheduled') || error.message.includes('scheduled_for'));
+        message.textContent = missingScheduledColumn
+          ? 'Narudžba nije poslana: pokreni supabase-order-updates.sql u Supabase SQL Editoru pa probaj ponovno.'
+          : 'Narudžba nije poslana: ' + error.message;
         message.className = 'form-message is-error';
         submit.disabled = false;
         submit.textContent = 'Pošalji narudžbu';
@@ -332,6 +461,7 @@
       saveCart([]);
       localStorage.setItem('buldogLastOrder', JSON.stringify({ id: orderId, phone: payload.phone }));
       form.reset();
+      updateScheduleFields();
       render();
       message.innerHTML = `Narudžba je poslana. Broj narudžbe je <strong>${escapeHtml(String(orderId).slice(0, 8))}</strong>. <a href="status.html?order=${encodeURIComponent(orderId)}">Prati status</a>.`;
       message.className = 'form-message is-success';
@@ -347,8 +477,8 @@
       const ctx = new AudioContext();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = 880;
+      osc.type = 'triangle';
+      osc.frequency.value = 1000;
       gain.gain.setValueAtTime(0.001, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.35, ctx.currentTime + 0.03);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
@@ -391,15 +521,27 @@
             </div>
           `).join('')}
         </div>
+        ${order.is_scheduled && order.scheduled_for ? `<p class="admin-note">Zakazano za: ${escapeHtml(formatDateTime(order.scheduled_for))}</p>` : ''}
         <ul class="admin-items">
           ${items.map((item) => `<li><strong>${escapeHtml(item.quantity)}x</strong> ${escapeHtml(item.name)} ${item.option ? `<span>${escapeHtml(item.option)}</span>` : ''}</li>`).join('')}
         </ul>
         <div class="admin-order-bottom">
           <strong>${money(order.total)}</strong>
-          <span>${new Date(order.created_at).toLocaleString('hr-HR')}</span>
+          <span>${formatDateTime(order.created_at)}</span>
         </div>
+        ${['novo', 'prihvacena', 'priprema'].includes(order.status) ? `<button class="danger-button cancel-order-button" type="button" data-cancel-order="${escapeHtml(order.id)}">Otkaži narudžbu</button>` : ''}
       </article>
     `;
+  }
+
+  function renderStatusList(resultEl, orders) {
+    resultEl.textContent = '';
+    orders.forEach((order) => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'status-result-item';
+      renderCustomerStatus(wrapper, order);
+      resultEl.appendChild(wrapper.firstElementChild);
+    });
   }
 
   function setupStatusPage() {
@@ -429,10 +571,12 @@
         return;
       }
       result.innerHTML = '<p class="form-message">Provjeravam status...</p>';
-      const { data, error } = await window.supabaseClient.rpc('get_order_status', {
-        p_order_id: orderInput.value.trim(),
-        p_phone: phoneInput.value.trim(),
-      });
+      const orderId = orderInput.value.trim();
+      const phone = phoneInput.value.trim();
+      const request = orderId
+        ? window.supabaseClient.rpc('get_order_status', { p_order_id: orderId, p_phone: phone })
+        : window.supabaseClient.rpc('get_orders_by_phone', { p_phone: phone });
+      const { data, error } = await request;
 
       if (error) {
         result.innerHTML = `<p class="form-message is-error">Status nije moguće dohvatiti: ${escapeHtml(error.message)}</p>`;
@@ -442,15 +586,22 @@
         result.innerHTML = '<p class="form-message is-error">Narudžba nije pronađena. Provjeri broj narudžbe i telefon.</p>';
         return;
       }
-      renderCustomerStatus(result, data[0]);
-      startStatusRealtime(data[0].id);
+      if (orderId) {
+        renderCustomerStatus(result, data[0]);
+        startStatusRealtime(data[0].id);
+      } else {
+        renderStatusList(result, data);
+        data.forEach((order) => startStatusRealtime(order.id));
+      }
       window.clearInterval(refreshTimer);
       refreshTimer = window.setInterval(checkStatus, 30000);
     }
 
     function startStatusRealtime(orderId) {
-      if (!window.supabaseClient || statusChannel) return;
-      statusChannel = window.supabaseClient
+      if (!window.supabaseClient) return;
+      if (!statusChannel) statusChannel = {};
+      if (statusChannel[orderId]) return;
+      statusChannel[orderId] = window.supabaseClient
         .channel(`order-status-${orderId}`)
         .on(
           'postgres_changes',
@@ -467,6 +618,30 @@
         .subscribe();
     }
 
+    result.addEventListener('click', async (event) => {
+      const button = event.target.closest('button[data-cancel-order]');
+      if (!button || !window.supabaseClient) return;
+      if (!phoneInput.value.trim()) {
+        alert('Upiši telefon koji je korišten za narudžbu.');
+        return;
+      }
+      if (!window.confirm('Želiš otkazati ovu narudžbu?')) return;
+      button.disabled = true;
+      button.textContent = 'Otkazujem...';
+      const { data, error } = await window.supabaseClient.rpc('cancel_order', {
+        p_order_id: button.dataset.cancelOrder,
+        p_phone: phoneInput.value.trim(),
+      });
+      if (error || !data || !data.length) {
+        alert(error ? 'Narudžba nije otkazana: ' + error.message : 'Narudžbu više nije moguće otkazati.');
+        button.disabled = false;
+        button.textContent = 'Otkaži narudžbu';
+        return;
+      }
+      if (orderInput.value.trim()) renderCustomerStatus(result, data[0]);
+      else checkStatus();
+    });
+
     form.addEventListener('submit', (event) => {
       event.preventDefault();
       checkStatus();
@@ -479,6 +654,9 @@
     const items = Array.isArray(order.items) ? order.items : [];
     const card = document.createElement('article');
     card.className = `admin-order status-${order.status || 'novo'}`;
+    const scheduledHtml = order.is_scheduled && order.scheduled_for
+      ? `<span class="admin-meta-badge admin-meta-badge--scheduled">Zakazano: ${escapeHtml(formatDateTime(order.scheduled_for))}</span>`
+      : '';
     card.innerHTML = `
       <div class="admin-order-head">
         <div>
@@ -491,7 +669,8 @@
       <div class="admin-order-meta">
         <span>${order.delivery_type === 'pickup' ? 'Preuzimanje' : 'Dostava'}</span>
         <span>${order.payment_method === 'card' ? 'Kartica' : 'Gotovina'}</span>
-        <span>${new Date(order.created_at).toLocaleString('hr-HR')}</span>
+        <span>${formatDateTime(order.created_at)}</span>
+        ${scheduledHtml}
       </div>
       <p class="admin-address">${escapeHtml(order.address || 'Bez adrese')}</p>
       <ul class="admin-items">
@@ -518,21 +697,68 @@
     const loginForm = document.getElementById('adminLoginForm');
     const loginMessage = document.getElementById('adminLoginMessage');
     const adminEmail = document.getElementById('adminEmail');
+    const adminStats = document.getElementById('adminStats');
     const logoutBtn = document.getElementById('adminLogout');
     const deleteVisibleBtn = document.getElementById('deleteVisibleOrders');
     const soundBtn = document.getElementById('enableSound');
     const refreshBtn = document.getElementById('refreshOrders');
     const statusFilter = document.getElementById('statusFilter');
+    const adminSearch = document.getElementById('adminSearch');
     const connection = document.getElementById('adminConnection');
     if (!list) return;
 
     let orders = [];
-    let soundEnabled = false;
+    let soundEnabled = true;
     let adminChannel = null;
+
+    function updateSoundButton() {
+      if (!soundBtn) return;
+      soundBtn.textContent = soundEnabled ? 'Ugasi zvuk' : 'Uključi zvuk';
+      soundBtn.classList.toggle('secondary-button', soundEnabled);
+      soundBtn.classList.toggle('btn-primary', !soundEnabled);
+      soundBtn.classList.toggle('is-muted', !soundEnabled);
+    }
+
+    function renderStats() {
+      if (!adminStats) return;
+      const counts = {
+        all: orders.length,
+        novo: 0,
+        priprema: 0,
+        dostava: 0,
+        scheduled: 0,
+      };
+      orders.forEach((order) => {
+        if (counts[order.status] !== undefined) counts[order.status] += 1;
+        if (order.is_scheduled || order.scheduled_for) counts.scheduled += 1;
+      });
+      adminStats.innerHTML = `
+        <div><strong>${counts.all}</strong><span>ukupno</span></div>
+        <div><strong>${counts.novo}</strong><span>na čekanju</span></div>
+        <div><strong>${counts.priprema}</strong><span>u pripremi</span></div>
+        <div><strong>${counts.dostava}</strong><span>dostava</span></div>
+        <div><strong>${counts.scheduled}</strong><span>zakazano</span></div>
+      `;
+    }
 
     function render() {
       const filter = statusFilter ? statusFilter.value : 'all';
-      const visible = filter === 'all' ? orders : orders.filter((order) => order.status === filter);
+      const query = adminSearch ? adminSearch.value.trim().toLowerCase() : '';
+      const visible = orders.filter((order) => {
+        const statusMatches = filter === 'all' || order.status === filter;
+        if (!statusMatches) return false;
+        if (!query) return true;
+        const haystack = [
+          order.id,
+          order.customer_name,
+          order.phone,
+          order.address,
+          order.note,
+          order.status,
+        ].join(' ').toLowerCase();
+        return haystack.includes(query);
+      });
+      renderStats();
       list.textContent = '';
       if (!visible.length) {
         const empty = document.createElement('p');
@@ -678,13 +904,15 @@
 
     if (soundBtn) {
       soundBtn.addEventListener('click', () => {
-        soundEnabled = true;
-        soundBtn.textContent = 'Zvuk uključen';
-        playAdminSound();
+        soundEnabled = !soundEnabled;
+        updateSoundButton();
+        if (soundEnabled) playAdminSound();
       });
     }
+    updateSoundButton();
     if (refreshBtn) refreshBtn.addEventListener('click', loadOrders);
     if (statusFilter) statusFilter.addEventListener('change', render);
+    if (adminSearch) adminSearch.addEventListener('input', render);
     if (deleteVisibleBtn) {
       deleteVisibleBtn.addEventListener('click', async () => {
         if (!window.supabaseClient) return;

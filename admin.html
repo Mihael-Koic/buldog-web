@@ -36,13 +36,17 @@
     </section>
 
     <div id="adminAppPanel" hidden>
-    <section class="admin-toolbar">
+    <section class="admin-toolbar admin-toolbar--top">
       <div>
-        <p class="eyebrow">Kuhinja i dostava</p>
         <h1>Admin narudžbe</h1>
-        <p><span id="adminEmail"></span> · <span id="adminConnection">Spajam se...</span></p>
+        <p><span id="adminEmail"></span> - <span id="adminConnection">Spajam se...</span></p>
       </div>
+      <div class="admin-stats" id="adminStats" aria-label="Pregled narudžbi"></div>
+    </section>
+
+    <section class="admin-toolbar admin-toolbar--controls">
       <div class="admin-actions">
+        <input id="adminSearch" class="admin-search" type="search" placeholder="Pretraži ime, telefon ili broj narudžbe">
         <select id="statusFilter" aria-label="Filter statusa">
           <option value="all">Sve narudžbe</option>
           <option value="novo">Na čekanju</option>
@@ -52,7 +56,7 @@
           <option value="zavrsena">Završene</option>
           <option value="otkazana">Otkazane</option>
         </select>
-        <button id="enableSound" class="btn-primary" type="button">Uključi zvuk</button>
+        <button id="enableSound" class="btn-primary" type="button">Ugasi zvuk</button>
         <button id="refreshOrders" class="secondary-button" type="button">Osvježi</button>
         <button id="deleteVisibleOrders" class="danger-button" type="button">Obriši prikazane</button>
         <button id="adminLogout" class="secondary-button" type="button">Odjava</button>
@@ -66,6 +70,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
   <script src="order-system.js"></script>
+  <script src="Block.js"></script>
   <script>
     const toggle = document.getElementById('menu-toggle');
     const nav = document.getElementById('nav');
