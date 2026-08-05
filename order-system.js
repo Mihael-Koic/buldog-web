@@ -71,8 +71,8 @@
       productPrices(item).forEach((option) => {
         const size = option.label ? ' ' + option.label : '';
         pizzaOptions.push({
-          label: `(${cleanBaseName(name, 'Pizza')}${size}) + vrhnje`,
-          price: Number(option.price) + 1,
+          label: `(${cleanBaseName(name, 'Pizza')}${size}) + vrhnje `,
+          price: Number(option.price),
         });
       });
     });
