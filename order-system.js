@@ -71,8 +71,8 @@
       productPrices(item).forEach((option) => {
         const size = option.label ? ' ' + option.label : '';
         pizzaOptions.push({
-          label: `(${cleanBaseName(name, 'Pizza')}${size}) + vrhnje `,
-          price: Number(option.price),
+          label: `(${cleanBaseName(name, 'Pizza')}${size}) + vrhnje`,
+          price: Number(option.price) + 1,
         });
       });
     });
@@ -1016,5 +1016,10 @@
     setupStatusPage();
     setupAdmin();
     updateCartCounter();
+  });
+
+  document.addEventListener('buldog:prices-loaded', () => {
+    setupMenuOrdering();
+    alignMenuActionRows();
   });
 })();

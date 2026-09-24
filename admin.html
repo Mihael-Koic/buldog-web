@@ -44,7 +44,13 @@
       <div class="admin-stats" id="adminStats" aria-label="Pregled narudžbi"></div>
     </section>
 
-    <section class="admin-toolbar admin-toolbar--controls">
+    <nav class="admin-tabs" aria-label="Admin alati">
+      <button class="admin-tab is-active" type="button" data-admin-tab="orders">Narudžbe hrane</button>
+      <button class="admin-tab" type="button" data-admin-tab="prices">Upravljanje cijenama</button>
+    </nav>
+
+    <div id="ordersAdminTab" class="admin-tab-panel">
+      <section class="admin-toolbar admin-toolbar--controls">
       <div class="admin-actions">
         <input id="adminSearch" class="admin-search" type="search" placeholder="Pretraži ime, telefon ili broj narudžbe">
         <select id="statusFilter" aria-label="Filter statusa">
@@ -61,20 +67,72 @@
         <button id="deleteVisibleOrders" class="danger-button" type="button">Obriši prikazane</button>
         <button id="adminLogout" class="secondary-button" type="button">Odjava</button>
       </div>
-    </section>
+      </section>
+      <section id="adminOrders" class="admin-orders" aria-live="polite"></section>
+    </div>
 
-    <section id="adminOrders" class="admin-orders" aria-live="polite"></section>
+    <section id="priceAdminPanel" class="checkout-panel price-admin-panel" hidden>
+      <div class="price-admin-hero">
+        <div>
+          <p class="eyebrow">Upravljanje cjenikom</p>
+          <h2>Cijene i dostupnost proizvoda</h2>
+          <p>Uredi cijene, raspored prikaza i dostupnost svakog proizvoda.</p>
+        </div>
+        <div id="priceAdminStats" class="price-admin-stats"></div>
+      </div>
+      <div class="price-admin-toolbar">
+        <input id="priceAdminSearch" type="search" placeholder="Pretraži proizvod..." aria-label="Pretraži proizvod">
+        <select id="priceAdminCategory" aria-label="Filtriraj kategoriju"><option value="all">Sve kategorije</option></select>
+        <button id="refreshPrices" class="secondary-button" type="button">Osvježi cijene</button>
+        <button id="bulkPriceEdit" class="btn-primary" type="button">Masovna promjena cijena</button>
+      </div>
+      <div class="price-admin-list-heading">
+        <div><strong>Proizvodi i cijene</strong><span>Uredi svaku varijantu posebno</span></div>
+        <span class="price-admin-hint">Svi iznosi su u EUR</span>
+      </div>
+      <div id="priceAdminList" class="price-admin-list"></div>
+      <h2 class="price-admin-history-title">Povijest promjena</h2>
+      <div id="adminPriceHistory" class="price-history-list"></div>
+    </section>
     </div>
   </main>
+
+  <div class="modal-overlay" id="bulkPriceModal" hidden>
+    <section class="modal bulk-price-modal" role="dialog" aria-modal="true" aria-labelledby="bulkPriceTitle">
+      <button class="modal-close" id="closeBulkPriceModal" type="button" aria-label="Zatvori">✕</button>
+      <p class="eyebrow">Brza izmjena cjenika</p>
+      <h2 id="bulkPriceTitle">Postavi raspored za sve cijene</h2>
+      <p class="bulk-price-intro">Odredi kada se postojeće cijene prikazuju na jelovniku.</p>
+      <form id="bulkPriceForm" class="bulk-price-form">
+        <div class="bulk-price-date-grid">
+          <label>Prikaži nove cijene od<input name="bulk_start" type="datetime-local" required></label>
+          <label>Sakrij nove cijene od<input name="bulk_end" type="datetime-local"></label>
+        </div>
+        <p class="bulk-price-note">Ostavite kraj prazan ako cijene trebaju vrijediti bez roka.</p>
+        <button class="btn-primary bulk-submit" type="submit">Spremi raspored</button>
+        <p id="bulkPriceMessage" class="form-message"></p>
+      </form>
+    </section>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
   <script src="order-system.js"></script>
+  <script src="price-admin.js"></script>
   <script src="Block.js"></script>
   <script>
     const toggle = document.getElementById('menu-toggle');
     const nav = document.getElementById('nav');
     if (toggle && nav) toggle.addEventListener('click', () => nav.classList.toggle('active'));
+
+    document.querySelectorAll('[data-admin-tab]').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const pricesActive = tab.dataset.adminTab === 'prices';
+        document.querySelectorAll('[data-admin-tab]').forEach((item) => item.classList.toggle('is-active', item === tab));
+        document.getElementById('ordersAdminTab').hidden = pricesActive;
+        document.getElementById('priceAdminPanel').hidden = !pricesActive;
+      });
+    });
   </script>
 </body>
 </html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Javni cjenik | Pizza Buldog</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo"><a href="index.html"><img class="imagelogo" src="/image/Logo buldog.png" alt="Pizza Buldog"></a></div>
+    <div class="menu-toggle" id="menu-toggle">☰</div>
+    <nav id="nav"><a href="index.html">Početna</a><a href="menu.html">Jelovnik</a></nav>
+  </header>
+  <main class="section public-price-list">
+    <h1>Javni cjenik</h1>
+    <p id="priceListUpdated" class="price-list-updated">Nove cijene vrijede od...</p>
+    <div class="public-price-actions">
+      <button id="downloadCsv" class="btn-primary" type="button">Preuzmi CSV</button>
+      <button id="downloadXml" class="secondary-button" type="button">Preuzmi XML</button>
+    </div>
+    <h2>Povijest promjena cijena</h2>
+    <div class="history-table-wrap"><table class="price-history-table"><thead><tr><th>Proizvod</th><th>Stara cijena</th><th>Nova cijena</th><th>Promijenjeno</th><th>Status</th></tr></thead><tbody id="priceHistory"><tr><td colspan="5">Učitavam povijest...</td></tr></tbody></table></div>
+  </main>
+  <footer><small>© 2003 - <span id="year"></span> Pizza Buldog. Sva prava pridržana.</small></footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="prices.js"></script>
+  <script>
+    const formatDate = (value) => new Date(value).toLocaleString('hr-HR', { dateStyle: 'medium', timeStyle: 'medium' });
+    const esc = (value) => String(value || '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
+    const priceText = (options) => (options || []).map((o) => `${o.label === 'Standardno' ? '' : o.label + ' '}${Number(o.price || 0).toFixed(2)} EUR`).join(' / ');
+    let currentProducts = [];
+    let currentHistory = [];
+    function downloadFile(filename, content, type) {
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(new Blob([content], { type }));
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+    function csvCell(value) { return `"${String(value ?? '').replace(/"/g, '""')}"`; }
+    function downloadCsv() {
+      const rows = [['Kategorija', 'Proizvod', 'Opcija', 'Cijena EUR', 'Vrijedi od', 'Vrijedi do', 'Status']];
+      currentProducts.forEach((product) => (product.options || []).forEach((option) => rows.push([product.category, product.name, option.label, Number(option.price || 0).toFixed(2), product.starts_at, product.ends_at || '', product.is_visible ? 'Aktivno' : 'Sakriveno'])));
+      downloadFile('pizza-buldog-cjenik.csv', '\ufeff' + rows.map((row) => row.map(csvCell).join(';')).join('\n'), 'text/csv;charset=utf-8');
+    }
+    function downloadXml() {
+      const rows = currentProducts.map((product) => `<proizvod><kategorija>${esc(product.category)}</kategorija><naziv>${esc(product.name)}</naziv><status>${product.is_visible ? 'Aktivno' : 'Sakriveno'}</status><vrijedi_od>${esc(product.starts_at)}</vrijedi_od><vrijedi_do>${esc(product.ends_at || '')}</vrijedi_do><opcije>${(product.options || []).map((option) => `<opcija><naziv>${esc(option.label)}</naziv><cijena_eur>${Number(option.price || 0).toFixed(2)}</cijena_eur></opcija>`).join('')}</opcije></proizvod>`).join('');
+      downloadFile('pizza-buldog-cjenik.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<cjenik generiran="${new Date().toISOString()}">${rows}</cjenik>`, 'application/xml;charset=utf-8');
+    }
+    async function loadPublicPrices() {
+      const history = document.getElementById('priceHistory');
+      const result = await window.supabaseClient.from('menu_products').select('*').order('category').order('name');
+      if (result.error) { history.innerHTML = '<tr><td colspan="5">Cjenik trenutno nije dostupan.</td></tr>'; return; }
+      currentProducts = result.data || [];
+      const scheduledDates = currentProducts.map((product) => new Date(product.starts_at).getTime()).filter(Number.isFinite);
+      const latestSchedule = scheduledDates.length ? Math.max(...scheduledDates) : Date.now();
+      document.getElementById('priceListUpdated').textContent = `Nove cijene vrijede od ${formatDate(latestSchedule)}.`;
+      const changes = await window.supabaseClient.from('menu_price_history').select('*').order('changed_at', { ascending: false }).limit(1000);
+      currentHistory = changes.data || [];
+      history.innerHTML = changes.error ? '<tr><td colspan="5">Povijest trenutno nije dostupna.</td></tr>' : currentHistory.map((change, index) => { const previous = currentHistory.slice(index + 1).find((row) => row.product_id === change.product_id); return `<tr><td><strong>${esc(change.product_name)}</strong><small>${esc(change.category)}</small></td><td>${esc(previous ? priceText(previous.options) : 'Početna cijena')}</td><td><strong>${esc(priceText(change.options))}</strong></td><td><strong>Promijenjeno:</strong> ${formatDate(change.changed_at)}<small>Vrijedi od: ${formatDate(change.starts_at)}</small></td><td><span class="history-status ${change.is_visible ? 'is-active' : 'is-hidden'}">${change.is_visible ? 'Aktivno' : 'Sakriveno'}</span></td></tr>`; }).join('') || '<tr><td colspan="5">Nema zabilježenih promjena.</td></tr>';
+    }
+    document.getElementById('year').textContent = new Date().getFullYear();
+    document.getElementById('menu-toggle').addEventListener('click', () => document.getElementById('nav').classList.toggle('active'));
+    document.getElementById('downloadCsv').addEventListener('click', downloadCsv);
+    document.getElementById('downloadXml').addEventListener('click', downloadXml);
+    loadPublicPrices();
+  </script>
+</body>
+</html>
