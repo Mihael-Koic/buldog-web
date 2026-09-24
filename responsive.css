@@ -253,6 +253,12 @@ h1 {
     display: flex;
   }
 
+  .navbar nav:not(.active) {
+    display: none !important;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
   body.mobile-nav-open {
     overflow: hidden;
   }

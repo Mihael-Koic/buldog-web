@@ -792,14 +792,12 @@
       toggle.addEventListener('click', () => {
         const isOpen = nav.classList.toggle('active');
         toggle.setAttribute('aria-expanded', String(isOpen));
-        document.body.classList.toggle('mobile-nav-open', isOpen);
       });
 
       nav.addEventListener('click', (event) => {
         if (event.target.closest('a')) {
           nav.classList.remove('active');
           toggle.setAttribute('aria-expanded', 'false');
-          document.body.classList.remove('mobile-nav-open');
         }
       });
     }
@@ -948,6 +946,7 @@
       const sections = Array.from(tabById.keys())
         .map((id) => document.getElementById(id))
         .filter(Boolean);
+      const tabScroller = tabBar.querySelector('.tabs-inner');
 
       const prefersReduced =
         window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -961,12 +960,9 @@
         }
 
         const activeTab = tabById.get(id);
-        if (activeTab) {
-          activeTab.scrollIntoView({
-            inline: 'center',
-            block: 'nearest',
-            behavior: prefersReduced ? 'auto' : 'smooth',
-          });
+        if (activeTab && tabScroller) {
+          const left = activeTab.offsetLeft - (tabScroller.clientWidth - activeTab.offsetWidth) / 2;
+          tabScroller.scrollTo({ left: Math.max(0, left), behavior: prefersReduced ? 'auto' : 'smooth' });
         }
       }
 
@@ -1006,10 +1002,11 @@
           const section = document.getElementById(id);
           if (!section) return;
 
-          const navbar = document.querySelector('.navbar');
-          const navHeight = navbar ? navbar.getBoundingClientRect().height : 0;
+          e.preventDefault();
+          const navHeight = document.querySelector('.navbar')?.getBoundingClientRect().height || 0;
           const tabHeight = tabBar.getBoundingClientRect().height || 0;
-          section.style.scrollMarginTop = `${Math.ceil(navHeight + tabHeight + 8)}px`;
+          const target = section.getBoundingClientRect().top + window.scrollY - navHeight - tabHeight - 8;
+          window.scrollTo({ top: Math.max(0, target), behavior: prefersReduced ? 'auto' : 'smooth' });
           history.replaceState(null, '', '#' + id);
           setActive(id);
         });
@@ -1802,53 +1799,82 @@ footer {
       max-width: 70vw;
     }
 
-    .menu-toggle {
-      display: grid;
-      place-items: center;
-      position: relative;
-      z-index: 2001;
-      width: 44px;
-      height: 44px;
-      border: 0;
-      padding: 0;
-      background: transparent;
+    .category-tabs {
+      display: block;
+      position: sticky;
+      top: 0;
+      z-index: 900;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px) saturate(160%);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     }
 
-    .navbar nav,
-    .navbar nav.active {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: .75rem;
-      width: 100vw;
-      height: 100dvh;
-      padding: 5.5rem 1.25rem 2rem;
-      border-radius: 0;
-      background: #111;
-      z-index: 2000;
-      overflow-y: auto;
-    }
-
-    .navbar nav:not(.active) {
+    .navbar nav {
       display: none;
+      flex-direction: column;
+      background: #111;
+      position: absolute;
+      top: 60px;
+      right: 0;
+      width: 200px;
+      padding: 1rem;
+      border-radius: 0 0 0 10px;
+      z-index: 1000;
+    }
+
+    .navbar nav.active {
+      display: flex;
     }
 
     .navbar nav a {
-      width: min(100%, 320px);
-      min-height: 52px;
-      margin: 0;
-      padding: .85rem 1rem;
-      border: 1px solid rgba(255,255,255,.16);
-      color: #fff;
-      font-size: 1.05rem;
-      text-align: center;
+      margin: .8rem 0;
     }
 
-    body.mobile-nav-open {
-      overflow: hidden;
+    html, body {
+      overflow-y: auto !important;
+      touch-action: pan-y;
+    }
+
+    #nav:not(.active) {
+      display: none !important;
+      pointer-events: none;
+    }
+
+    #nav.active {
+      display: flex !important;
+      pointer-events: auto;
+    }
+
+    .category-tabs {
+      display: block !important;
+      position: sticky !important;
+      top: 0;
+      z-index: 1900;
+    }
+
+    .category-tabs .tabs-inner {
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      touch-action: pan-x;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .category-tabs .tabs-inner::-webkit-scrollbar {
+      display: none;
+    }
+
+    .navbar {
+      position: sticky !important;
+      top: 0;
+      z-index: 2000;
+    }
+
+    .category-tabs {
+      position: sticky !important;
+      top: 68px;
+      z-index: 1900;
     }
   }
 </style>
