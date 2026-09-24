@@ -9,10 +9,11 @@
 </head>
 <body>
   
+  
   <!-- Navigacija -->
   <header class="navbar">
   <div class="logo"><a href="index.html"><img class="imagelogo" src="/image/Logo buldog.png" alt=""></a></div>
-  <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Otvori navigaciju" aria-expanded="false">☰</button>
+<button class="menu-toggle" id="menu-toggle" type="button" aria-label="Otvori navigaciju" aria-expanded="false">☰</button> 
   <nav id="nav">
     <a href="index.html">Početna</a>
     <a href="index.html#onama">O nama</a>
@@ -21,7 +22,7 @@
   </nav>
 </header>
 
-  <!-- Kategorije (mobile tabs) -->
+  <!-- Kategorije (mobile tabs) 
   <nav class="category-tabs" aria-label="Kategorije jelovnika">
     <div class="tabs-inner">
       <a class="tab" href="#pizze">Pizze</a>
@@ -33,7 +34,7 @@
       <a class="tab" href="#prilozi">Prilozi</a>
       <a class="tab" href="#pica">Pića</a>
     </div>
-  </nav>
+  </nav> -->
 
   <!-- Meni -->
   <section class="section" id="pizze">
@@ -739,9 +740,9 @@
   </section>
 
   <!-- Footer -->
-  <footer>
-    <a href="price-list.html">Javni cjenik i povijest promjena cijena</a>
-    <small>© 2003 - <span id="year"></span> Pizza Buldog. Sva prava pridržana.</small>
+     <footer>
+    <small>© 2003 - <span id="year"></span> Pizza Buldog. Sva prava pridržana.</small> 
+    <a href="price-list.html" style="color: white;">Javni cjenik</a>
   </footer>
 
   <button class="back-to-top" id="back-to-top" type="button" aria-label="Vrati na vrh">↑</button>
@@ -1042,22 +1043,36 @@
     }
 
     const backToTop = document.getElementById('back-to-top');
-    if (backToTop) {
-      const prefersReducedTop =
-        window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      function updateBackToTop() {
-        const y = window.scrollY || document.documentElement.scrollTop || 0;
-        backToTop.classList.toggle('is-visible', y > 450);
-      }
+if (backToTop) {
 
-      backToTop.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: prefersReducedTop ? 'auto' : 'smooth' });
-      });
+  const prefersReducedTop =
+    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      updateBackToTop();
-      window.addEventListener('scroll', updateBackToTop, { passive: true });
-    }
+  function updateBackToTop() {
+
+    const y = window.scrollY || document.documentElement.scrollTop || 0;
+
+    backToTop.classList.toggle('is-visible', y > 450);
+
+  }
+
+  backToTop.addEventListener('click', () => {
+
+    window.scrollTo({
+      top: 0,
+      behavior: prefersReducedTop ? 'auto' : 'smooth'
+    });
+
+  });
+
+  updateBackToTop();
+
+  window.addEventListener('scroll', updateBackToTop, {
+    passive: true
+  });
+
+}
   });
 </script>
 
